@@ -7,13 +7,15 @@ import 'package:dart_encrypt_suite/src/domain/interfaces/dart_encrypt_domain.dar
 
 class DartEncryptSetup extends DartEncryptDomain {
   DartEncryptSetup._(this._domain);
-  static DartEncryptSetup aes = DartEncryptSetup._(AESLogic());
+
+  static DartEncryptSetup aes = DartEncryptSetup._(AESLogic.instance);
+
   static DartEncryptSetup rsa = DartEncryptSetup._(RSALogic());
 
   final EncrypterDomain _domain;
 
+  DartEncrypt? mode;
+
   @override
-  void initializeEncrypter({required DartEncrypt mode, required AesModel model}) {
-    mode == DartEncrypt.AES ? aes._domain.setup(aes: model) : rsa._domain.setup(aes: model);
-  }
+  void initializeEncrypter({required AesModel model, required DartEncryptSetup settings}) => settings._domain.setup(aes: model);
 }

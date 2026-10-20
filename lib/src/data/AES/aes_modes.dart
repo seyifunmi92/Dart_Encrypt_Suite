@@ -1,1 +1,1 @@
-enum AESModes { GCM, ECB, CBC }
+enum AESModes { GCM, CBC }
