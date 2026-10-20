@@ -7,6 +7,7 @@ class AESLogic extends EncrypterDomain {
   static AESLogic? _aesLogic;
 
   AesModel? _aes;
+  AesModel? get aes => _aes;
 
   factory AESLogic() {
     _aesLogic ??= AESLogic._();
@@ -14,8 +15,7 @@ class AESLogic extends EncrypterDomain {
   }
 
   @override
-  Future<bool> setup({required AesModel aes}) async {
+  void setup({required AesModel aes}) async {
     _aes = aes;
-    return true;
   }
 }
