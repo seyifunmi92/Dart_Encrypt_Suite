@@ -9,14 +9,30 @@ class AesModel extends Equatable {
   final AESModes? mode;
   final bool? useHMAC;
   final bool? useTimeComplexity;
+  final String? aad;
 
-  AesModel({required this.key, this.iv, this.mode, this.useHMAC, this.useTimeComplexity}) {
-    //now lets set all the business rules needed here
-    if ((useHMAC == true || useTimeComplexity == true) && mode != AESModes.CBC) throw ArgumentError('Invalid selection, HMAC can only be selected for CBC mode');
+  AesModel({required this.key, this.iv, this.mode, this.useHMAC, this.useTimeComplexity, this.aad}) {
+    if ((mode == AESModes.CBC || mode == AESModes.GCM) && iv == null) {
+      throw ArgumentError('$mode Mode requires and Intialization vector');
+    }
 
-    //
+    if ((useHMAC == true || useTimeComplexity == true) && mode != AESModes.CBC) {
+      throw ArgumentError('HMAC and Time complexity checks are only valid for CBC Modes');
+    }
+
+    if (useHMAC == true && useTimeComplexity == false) {
+      throw ArgumentError('Invalid selection, HMAC and Time complexity must be must together');
+    }
+
+    if (useHMAC == false && useTimeComplexity == true) {
+      throw ArgumentError('Invalid selection, HMAC and Time complexity must be must together');
+    }
+
+    if (aad != null && mode != AESModes.GCM) {
+      throw ArgumentError('Additional Authenticated Data is only supported in GCM Mode');
+    }
   }
 
   @override
-  List<Object?> get props => [key, iv];
+  List<Object?> get props => [key, iv, mode, useHMAC, useTimeComplexity, aad];
 }

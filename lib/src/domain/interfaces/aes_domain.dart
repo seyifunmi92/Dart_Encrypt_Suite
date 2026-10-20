@@ -1,5 +1,5 @@
 import 'package:dart_encrypt_suite/src/data/AES/aes_model.dart';
 
-abstract class AesDomain {
-  Future<bool> setupAES({required AesModel aes});
+abstract class EncrypterDomain {
+  Future<bool> setup({required AesModel aes});
 }

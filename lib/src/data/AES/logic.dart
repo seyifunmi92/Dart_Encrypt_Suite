@@ -1,7 +1,7 @@
 import 'package:dart_encrypt_suite/src/data/AES/aes_model.dart';
 import 'package:dart_encrypt_suite/src/domain/interfaces/aes_domain.dart';
 
-class AESLogic extends AesDomain {
+class AESLogic extends EncrypterDomain {
   AESLogic._();
 
   static AESLogic? _aesLogic;
@@ -14,12 +14,8 @@ class AESLogic extends AesDomain {
   }
 
   @override
-  Future<bool> setupAES({required AesModel aes}) async {
-    try {
-      _aes = aes;
-      return true;
-    } catch (e) {
-      return false;
-    }
+  Future<bool> setup({required AesModel aes}) async {
+    _aes = aes;
+    return true;
   }
 }
