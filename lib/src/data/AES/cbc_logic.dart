@@ -9,13 +9,13 @@ class CbcLogic extends AesBaseLogic {
   @override
   String encrypt({required AesModel model, required String plainText}) {
     try {
-      return model.useHMAC == true ? encryptWithHMAC(model, plainText) : encryptNoHMAC(model, plainText);
+      return model.useHMAC == true ? _encryptWithHMAC(model, plainText) : _encryptNoHMAC(model, plainText);
     } catch (e) {
       throw 'Encryption Failed';
     }
   }
 
-  String encryptNoHMAC(AesModel model, String plainText) {
+  String _encryptNoHMAC(AesModel model, String plainText) {
     try {
       final raw = [model.key.key, plainText];
       final rawBytes = raw.map((e) => Uint8List.fromList(utf8.encode(e))).toList();
@@ -33,7 +33,7 @@ class CbcLogic extends AesBaseLogic {
     }
   }
 
-  String encryptWithHMAC(AesModel model, String plainText) {
+  String _encryptWithHMAC(AesModel model, String plainText) {
     try {
       final raw = [model.key.key, plainText];
       final rawBytes = raw.map((e) => Uint8List.fromList(utf8.encode(e))).toList();
@@ -54,5 +54,65 @@ class CbcLogic extends AesBaseLogic {
     } catch (e) {
       throw 'Encryption Failed';
     }
+  }
+
+  @override
+  String decrypt({required AesModel model, required String cipherText}) {
+    try {
+      final split = cipherText.split(':');
+      if (split.length == 3) return _decryptWithHMAC(model, split);
+      if (split.length == 2) return _decryptWithIV(model, split);
+      if (split.length == 1 && model.iv != null) return _decryptExternalWithIV();
+      if (split.length == 1 && model.iv == null) return _decryptExternalNoIV();
+      throw 'Unable to decrypt at the moment';
+    } catch (e) {
+      throw 'Decryption Failed';
+    }
+  }
+
+  String _decryptWithHMAC(AesModel model, List<String> parts) {
+    try {
+      final keyBytes = Uint8List.fromList(utf8.encode(model.key.key));
+      final ivBytes = base64.decode(parts[0]);
+      final cipherBytes = base64.decode(parts[1]);
+      final receivedHmac = base64.decode(parts[2]);
+      final hmac = HMac(SHA256Digest(), 64)..init(KeyParameter(keyBytes));
+      final expectedHmac = hmac.process(cipherBytes);
+      if (!_timingSafeEquals(receivedHmac, expectedHmac)) throw 'Decryption Failed';
+
+      //lets decrypt
+      final cipher = PaddedBlockCipher('AES/CBC/PKCS7')..init(false, PaddedBlockCipherParameters(ParametersWithIV(KeyParameter(keyBytes), ivBytes), null));
+      return utf8.decode(cipher.process(cipherBytes));
+    } catch (e) {
+      throw 'Decryption Failed';
+    }
+  }
+
+  String _decryptWithIV(AesModel model, List<String> parts) {
+    try {
+      final keyBytes = Uint8List.fromList(utf8.encode(model.key.key));
+      final ivBytes = base64.decode(parts[0]);
+      final cipherBytes = base64.decode(parts[1]);
+      final cipher = PaddedBlockCipher('AES/CBC/PKCS7')..init(false, PaddedBlockCipherParameters(ParametersWithIV(KeyParameter(keyBytes), ivBytes), null));
+      return utf8.decode(cipher.process(cipherBytes));
+    } catch (e) {
+      throw 'Decryption Failed';
+    }
+  }
+
+  String _decryptExternalWithIV() {}
+
+  String _decryptExternalNoIV() {}
+
+  bool _timingSafeEquals(Uint8List a, Uint8List b) {
+    if (a.length != b.length) return false;
+
+    var res = 0;
+
+    for (var i = 0; i < a.length; i++) {
+      res |= a[i] ^ b[i];
+    }
+
+    return res == 0;
   }
 }
