@@ -1,7 +1,10 @@
 import 'package:dart_encrypt_suite/src/data/AES/logic.dart';
+import 'package:dart_encrypt_suite/src/data/AES/aes_modes.dart';
 import 'package:dart_encrypt_suite/src/data/AES/aes_model.dart';
 import 'package:dart_encrypt_suite/src/data/setup/algorithm.dart';
 import 'package:dart_encrypt_suite/src/data/setup/setup_base.dart';
+import 'package:dart_encrypt_suite/src/data/AES/aes_base_logic.dart';
+import 'package:dart_encrypt_suite/src/data/AES/aes_base_factory.dart';
 library;
 
 
@@ -20,4 +23,5 @@ export 'src/domain/value_objects/aes/iv.dart';
 export 'src/domain/value_objects/aes/key.dart';
 
 AESLogic aes = AESLogic.instance;
-void  setup({required DartEncrypt mode, required AesModel model}) => SetupBase(mode: mode).initialize(model: model);
+void setup({required DartEncrypt mode, required AesModel model}) => SetupBase(mode: mode).initialize(model: model);
+AesBaseLogic aesLogic({required AESModes mode}) => AesBaseFactory(mode: mode).logic;

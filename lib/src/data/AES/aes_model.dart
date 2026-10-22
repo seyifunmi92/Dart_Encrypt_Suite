@@ -5,17 +5,12 @@ import 'package:dart_encrypt_suite/src/domain/value_objects/aes/key.dart';
 
 class AesModel extends Equatable {
   final AESKey key;
-  final AESIV? iv;
   final AESModes? mode;
   final bool? useHMAC;
   final bool? useTimeComplexity;
   final String? aad;
 
-  AesModel({required this.key, this.iv, this.mode, this.useHMAC, this.useTimeComplexity, this.aad}) {
-    if ((mode == AESModes.CBC || mode == AESModes.GCM) && iv == null) {
-      throw ArgumentError('$mode Mode requires and Intialization vector');
-    }
-
+  AesModel({required this.key, this.mode, this.useHMAC, this.useTimeComplexity, this.aad}) {
     if ((useHMAC == true || useTimeComplexity == true) && mode != AESModes.CBC) {
       throw ArgumentError('HMAC and Time complexity checks are only valid for CBC Modes');
     }

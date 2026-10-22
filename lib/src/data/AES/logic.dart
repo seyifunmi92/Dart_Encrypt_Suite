@@ -1,14 +1,13 @@
-import 'package:dart_encrypt_suite/src/data/AES/aes_model.dart';
-import 'package:dart_encrypt_suite/src/domain/interfaces/aes_domain.dart';
+import 'package:dart_encrypt_suite/dart_encrypt_suite.dart';
 
 class AESLogic extends EncrypterDomain {
   AESLogic._();
 
   static AESLogic instance = AESLogic._();
 
-  AesModel? _aes;
+  late AesModel _aes;
 
-  AesModel? get aes => _aes;
+  AesModel get aes => _aes;
 
   @override
   void setup({required AesModel aes}) async {
@@ -23,7 +22,10 @@ class AESLogic extends EncrypterDomain {
 
   @override
   String encrypt({required String plainText}) {
-    // TODO: implement encrypt
-    throw UnimplementedError();
+    try {
+      return aesLogic(mode: _aes.mode!).encrypt(model: _aes, plainText: plainText);
+    } catch (e) {
+      rethrow;
+    }
   }
 }
