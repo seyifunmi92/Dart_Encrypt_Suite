@@ -7,4 +7,16 @@ class RSALogic extends EncrypterDomain {
     // TODO: implement setupRSA
     throw UnimplementedError();
   }
+
+  @override
+  String decrypt() {
+    // TODO: implement decrypt
+    throw UnimplementedError();
+  }
+
+  @override
+  String encrypt({required String plainText}) {
+    // TODO: implement encrypt
+    throw UnimplementedError();
+  }
 }

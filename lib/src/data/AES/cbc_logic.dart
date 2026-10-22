@@ -62,8 +62,8 @@ class CbcLogic extends AesBaseLogic {
       final split = cipherText.split(':');
       if (split.length == 3) return _decryptWithHMAC(model, split);
       if (split.length == 2) return _decryptWithIV(model, split);
-      if (split.length == 1 && model.iv != null) return _decryptExternalWithIV();
-      if (split.length == 1 && model.iv == null) return _decryptExternalNoIV();
+      if (split.length == 1 && model.iv != null) return _decryptExternalWithIV(model, cipherText);
+      if (split.length == 1 && model.iv == null) return _decryptExternalNoIV(model, cipherText);
       throw 'Unable to decrypt at the moment';
     } catch (e) {
       throw 'Decryption Failed';
@@ -100,19 +100,35 @@ class CbcLogic extends AesBaseLogic {
     }
   }
 
-  String _decryptExternalWithIV() {}
+  String _decryptExternalWithIV(AesModel model, String cipherText) {
+    try {
+      final keyBytes = Uint8List.fromList(utf8.encode(model.key.key));
+      final ivBytes = Uint8List.fromList(utf8.encode(model.iv!.iv));
+      final cipherBytes = base64.decode(cipherText);
+      final cipher = PaddedBlockCipher('AES/CBC/PKCS7')..init(false, PaddedBlockCipherParameters(ParametersWithIV(KeyParameter(keyBytes), ivBytes), null));
+      return utf8.decode(cipher.process(cipherBytes));
+    } catch (e) {
+      throw 'Decryption Failed';
+    }
+  }
 
-  String _decryptExternalNoIV() {}
+  String _decryptExternalNoIV(AesModel model, String cipherText) {
+    try {
+      final keyBytes = Uint8List.fromList(utf8.encode(model.key.key));
+      final cipherBytes = base64.decode(cipherText);
+      final cipher = PaddedBlockCipher('AES/CBC/PKCS7')..init(false, PaddedBlockCipherParameters(KeyParameter(keyBytes), null));
+      return utf8.decode(cipher.process(cipherBytes));
+    } catch (e) {
+      throw 'Decryption Failed';
+    }
+  }
 
   bool _timingSafeEquals(Uint8List a, Uint8List b) {
     if (a.length != b.length) return false;
-
     var res = 0;
-
     for (var i = 0; i < a.length; i++) {
       res |= a[i] ^ b[i];
     }
-
     return res == 0;
   }
 }
