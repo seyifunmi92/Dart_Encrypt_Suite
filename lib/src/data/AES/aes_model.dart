@@ -1,9 +1,8 @@
-import 'package:equatable/equatable.dart';
 import 'package:dart_encrypt_suite/src/data/AES/aes_modes.dart';
 import 'package:dart_encrypt_suite/src/domain/value_objects/aes/iv.dart';
 import 'package:dart_encrypt_suite/src/domain/value_objects/aes/key.dart';
 
-class AesModel extends Equatable {
+class AesModel {
   final AESKey key;
   final AESIV? iv;
   final AESModes? mode;
@@ -28,7 +27,4 @@ class AesModel extends Equatable {
       throw ArgumentError('Additional Authenticated Data is only supported in GCM Mode');
     }
   }
-
-  @override
-  List<Object?> get props => [key, iv, mode, useHMAC, useTimeComplexity, aad];
 }

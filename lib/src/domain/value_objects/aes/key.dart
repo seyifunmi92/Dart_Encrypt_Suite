@@ -1,7 +1,6 @@
 import 'dart:convert';
-import 'package:equatable/equatable.dart';
 
-class AESKey extends Equatable {
+class AESKey {
   final String key;
 
   AESKey(this.key) {
@@ -9,7 +8,4 @@ class AESKey extends Equatable {
     final keyLength = utf8.encode(key).length;
     if (!validKeyLengths.contains(keyLength)) throw ArgumentError('Invalid key length of $keyLength bytes \nAES Encryption key must exactly be 16, 24, or 32 bytes');
   }
-
-  @override
-  List<Object?> get props => [key];
 }

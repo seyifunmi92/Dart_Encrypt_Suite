@@ -19,3 +19,6 @@ All notable changes to this project will be documented in this file.
 - `AesBaseFactory` — routes to correct cipher logic based on mode
 - `SetupBase` — initialises the encrypter and returns a setup result model
 - `DartcryptModel` — carries setup result, key, IV, and initialization timestamp
+
+## [0.0.2] - 2026-10-22
+- Reduce Dependencies 
