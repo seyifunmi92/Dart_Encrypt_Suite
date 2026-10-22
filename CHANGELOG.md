@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.0.2] - 2026-10-22
+- Reduce Dependencies 
+
 ## [0.0.1] - 2026-10-22
 
 ### Added
@@ -20,5 +23,4 @@ All notable changes to this project will be documented in this file.
 - `SetupBase` — initialises the encrypter and returns a setup result model
 - `DartcryptModel` — carries setup result, key, IV, and initialization timestamp
 
-## [0.0.2] - 2026-10-22
-- Reduce Dependencies 
+
