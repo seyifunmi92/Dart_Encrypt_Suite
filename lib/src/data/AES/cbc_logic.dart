@@ -48,7 +48,7 @@ class CbcLogic extends AesBaseLogic {
 
       //generate HMAC
       final hmac = HMac(SHA256Digest(), 64)..init(KeyParameter(keyBytes));
-      final hmacBytes = hmac.process(cipherBytes);
+      final hmacBytes = hmac.process(Uint8List.fromList([...ivBytes, ...cipherBytes]));
       final hmacBase64 = base64.encode(hmacBytes);
       return '$ivBase64:$cipherBase64:$hmacBase64';
     } catch (e) {
@@ -60,7 +60,10 @@ class CbcLogic extends AesBaseLogic {
   String decrypt({required AesModel model, required String cipherText}) {
     try {
       final split = cipherText.split(':');
-      if (split.length == 3) return _decryptWithHMAC(model, split);
+      if (model.useHMAC == true) {
+        if (split.length != 3) throw 'Decryption Failed';
+        return _decryptWithHMAC(model, split);
+      }
       if (split.length == 2) return _decryptWithIV(model, split);
       if (split.length == 1 && model.iv != null) return _decryptExternalWithIV(model, cipherText);
       if (split.length == 1 && model.iv == null) return _decryptExternalNoIV(model, cipherText);
@@ -77,7 +80,7 @@ class CbcLogic extends AesBaseLogic {
       final cipherBytes = base64.decode(parts[1]);
       final receivedHmac = base64.decode(parts[2]);
       final hmac = HMac(SHA256Digest(), 64)..init(KeyParameter(keyBytes));
-      final expectedHmac = hmac.process(cipherBytes);
+      final expectedHmac = hmac.process(Uint8List.fromList([...ivBytes, ...cipherBytes]));
       if (!_timingSafeEquals(receivedHmac, expectedHmac)) throw 'Decryption Failed';
 
       //lets decrypt

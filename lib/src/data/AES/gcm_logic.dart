@@ -7,4 +7,10 @@ class GCMLogic extends AesBaseLogic {
     // TODO: implement encrypt
     throw UnimplementedError();
   }
+
+  @override
+  String decrypt({required AesModel model, required String cipherText}) {
+    // TODO: implement decrypt
+    throw UnimplementedError();
+  }
 }

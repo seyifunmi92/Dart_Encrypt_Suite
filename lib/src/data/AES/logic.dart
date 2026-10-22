@@ -10,14 +10,22 @@ class AESLogic extends EncrypterDomain {
   AesModel get aes => _aes;
 
   @override
-  void setup({required AesModel aes}) async {
-    _aes = aes;
+  DartcryptModel setup({required AesModel aes}) {
+    try {
+      _aes = aes;
+      return DartcryptModel(isSuccess: true, key: _aes.key.key, iv: _aes.iv?.iv, initializationTime: DateTime.now());
+    } catch (e) {
+      return DartcryptModel(isSuccess: false);
+    }
   }
 
   @override
-  String decrypt() {
-    // TODO: implement decrypt
-    throw UnimplementedError();
+  String decrypt({required String cipherText}) {
+    try {
+      return aesLogic(mode: _aes.mode!).decrypt(model: _aes, cipherText: cipherText);
+    } catch (e) {
+      throw 'Decryption Failed';
+    }
   }
 
   @override

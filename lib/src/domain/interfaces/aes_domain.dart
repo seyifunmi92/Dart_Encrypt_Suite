@@ -1,9 +1,9 @@
-import 'package:dart_encrypt_suite/src/data/AES/aes_model.dart';
+import 'package:dart_encrypt_suite/dart_encrypt_suite.dart';
 
 abstract class EncrypterDomain {
-  void setup({required AesModel aes});
+  DartcryptModel setup({required AesModel aes});
 
   String encrypt({required String plainText});
 
-  String decrypt();
+  String decrypt({required String cipherText});
 }

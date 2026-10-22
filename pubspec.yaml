@@ -1,10 +1,10 @@
 name: dart_encrypt_suite
 description: "dart_encrypt_suite is a Dart/Flutter encryption package that gives developers a single, clean API for AES and RSA encryption , without the boilerplate"
 version: 0.0.1
-homepage:
+homepage: https://github.com/seyifunmi92/Dart_Encrypt_Suite
 
 environment:
-  sdk: ^3.11.1
+  sdk: '>=3.11.1 <4.0.0'
   flutter: ">=1.17.0"
 
 dependencies:

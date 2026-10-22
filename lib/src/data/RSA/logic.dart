@@ -1,15 +1,8 @@
-import 'package:dart_encrypt_suite/src/data/AES/aes_model.dart';
-import 'package:dart_encrypt_suite/src/domain/interfaces/aes_domain.dart';
+import 'package:dart_encrypt_suite/dart_encrypt_suite.dart';
 
 class RSALogic extends EncrypterDomain {
   @override
-  Future<bool> setup({required AesModel aes}) {
-    // TODO: implement setupRSA
-    throw UnimplementedError();
-  }
-
-  @override
-  String decrypt() {
+  String decrypt({required String cipherText}) {
     // TODO: implement decrypt
     throw UnimplementedError();
   }
@@ -17,6 +10,12 @@ class RSALogic extends EncrypterDomain {
   @override
   String encrypt({required String plainText}) {
     // TODO: implement encrypt
+    throw UnimplementedError();
+  }
+
+  @override
+  DartcryptModel setup({required AesModel aes}) {
+    // TODO: implement setup
     throw UnimplementedError();
   }
 }
